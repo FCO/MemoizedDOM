@@ -1,0 +1,17 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "todo app",
+  "main": "index.js",
+  "dependencies": {
+    "parcel": "^1.9.7",
+    "parcel-plugin-nqp": "0.20.0"
+  },
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "devDependencies": {
+  },
+  "author": "Fernando Correa",
+  "license": "Artistic-2.0"
+}
