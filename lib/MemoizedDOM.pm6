@@ -1,4 +1,4 @@
-my \document = EVAL :lang<JavaScript>, 'return document';
+my $document;
 EVAL :lang<JavaScript>, 'HTMLElement.prototype.defined = function() { return true }';
 
 sub h1(*@inner, *%pars) is export {
@@ -28,10 +28,11 @@ sub input(*@inner, *%pars) is export {
 role Tag { ... }
 
 class Element {
+    has $.document = $document //= EVAL :lang<JavaScript>, 'return document';
     has @.cache;
     has Tag $.owner is required;
     has $.tag;
-    has $.dom-element = document.createElement($!tag);
+    has $.dom-element = $!document.createElement($!tag);
 
     method TWEAK(|) {
         say "creating DOM element: { $!tag // "???" }";
@@ -69,7 +70,7 @@ class Element {
         }
 
         $!dom-element.appendChild: $_
-        for @content.map({ .?get-tag-data // $_ }).map({ .?dom-element // document.createTextNode: .Str })
+        for @content.map({ .?get-tag-data // $_ }).map({ .?dom-element // $!document.createTextNode: .Str })
     }
 
     method checked(Bool $checked) {
@@ -78,6 +79,7 @@ class Element {
 }
 
 role Tag does Callable {
+    has         $.document;
     has         @!cache;
     has Element $.root;
 
@@ -97,12 +99,12 @@ role Tag does Callable {
     }
 
     method mount-on($root) {
-        $!root = Element.new: :dom-element($root), :owner(self);
+        $!root = Element.new: :dom-element($root), :owner(self), |(:$!document with $!document);
         self.call-render
     }
 
     method create-element(Str $tag) {
-        Element.new: :$tag, :owner(self)
+        Element.new: :$tag, :owner(self), |(:$!document with $!document)
     }
 
     multi method element(
