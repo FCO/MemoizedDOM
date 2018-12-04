@@ -1,5 +1,4 @@
 my $document;
-EVAL :lang<JavaScript>, 'HTMLElement.prototype.defined = function() { return true }';
 
 sub h1(*@inner, *%pars) is export {
     $*parent.element("h1", @inner, |%pars)
