@@ -39,11 +39,17 @@ class Mock {
     }
 
     my $m1 = Mock.new;
-    my $a = Bla(:document($m1)).mount-on: Mock.new;
+    my $a = Bla(:document($m1));
+    $a.mount-on: Mock.new;
     $m1.verify-create-element:   1;
     $m1.verify-append-child:     0;
     $m1.verify-create-text-node: 0;
 
+    $a.call-render;
+
+    $m1.verify-create-element:   1;
+    $m1.verify-append-child:     0;
+    $m1.verify-create-text-node: 0;
 }
 {
     class Ble does Tag {
@@ -53,7 +59,14 @@ class Mock {
     }
 
     my $m1 = Mock.new;
-    my $a = Ble(:document($m1)).mount-on: Mock.new;
+    my $a = Ble(:document($m1));
+    $a.mount-on: Mock.new;
+    $m1.verify-create-element:   1;
+    $m1.verify-append-child:     1;
+    $m1.verify-create-text-node: 1;
+
+    $a.call-render;
+
     $m1.verify-create-element:   1;
     $m1.verify-append-child:     1;
     $m1.verify-create-text-node: 1;
@@ -68,7 +81,14 @@ class Mock {
     }
 
     my $m1 = Mock.new;
-    my $a = Bli(:document($m1)).mount-on: Mock.new;
+    my $a = Bli(:document($m1));
+    $a.mount-on: Mock.new;
+    $m1.verify-create-element:   2;
+    $m1.verify-append-child:     2;
+    $m1.verify-create-text-node: 1;
+
+    $a.call-render;
+
     $m1.verify-create-element:   2;
     $m1.verify-append-child:     2;
     $m1.verify-create-text-node: 1;
