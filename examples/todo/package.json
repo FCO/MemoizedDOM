@@ -8,7 +8,8 @@
     "parcel-plugin-nqp": "0.20.0"
   },
   "scripts": {
-    "start": "parcel index.html"
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "devDependencies": {},
   "author": "Fernando Correa",
