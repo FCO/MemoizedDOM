@@ -4,14 +4,13 @@
   "description": "todo app",
   "main": "index.js",
   "dependencies": {
-    "parcel": "^1.9.7",
+    "parcel": "^1.10.3",
     "parcel-plugin-nqp": "0.20.0"
   },
   "scripts": {
     "start": "parcel index.html"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "author": "Fernando Correa",
   "license": "Artistic-2.0"
 }
