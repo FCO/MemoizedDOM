@@ -1,0 +1,24 @@
+{
+  "authors" : [
+    "Fernando Correa de Oliveira"
+  ],
+  "build-depends" : [ ],
+  "depends" : [ ],
+  "description" : "Memoized DOM",
+  "license" : "Artistic-2.0",
+  "name" : "MemoizedDOM",
+  "perl" : "6.c",
+  "provides" : {
+    "MemoizedDOM"          : "lib/MemoizedDOM",
+    "MemoizedDOM::Element" : "lib/MemoizedDOM/Element.pm6",
+    "MemoizedDOM::Tag"     : "lib/MemoizedDOM/Tag.pm6",
+    "MemoizedDOM::Subs"    : "lib/MemoizedDOM/Subs.pm6"
+  },
+  "resources" : [ ],
+  "source-url" : "",
+  "tags" : [ "dom", "memoized", "react" ],
+  "test-depends" : [
+      "Test::META"
+  ],
+  "version" : "0.0.1"
+}
