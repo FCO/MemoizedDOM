@@ -1,10 +1,12 @@
 use Test;
 use MemoizedDOM;
 
-class Mock {
+class Mock does Associative {
     has Int $!create-text-node = 0;
     has Int $!create-element   = 0;
     has Int $!append-child     = 0;
+
+    method AT-KEY(|) is rw { $ = Any }
 
     method createTextNode($text) {
         $!create-text-node++;
@@ -17,16 +19,19 @@ class Mock {
         $!append-child++;
     }
 
-    method verify-create-element(Int $times) {
-        is $!create-element, $times, "expected to create-element be called $times times"
+    method verify-create-element(Int $times = 1) {
+        is $!create-element, $times, "expected to create-element be called $times times";
+        $!create-element = 0
     }
 
-    method verify-append-child(Int $times) {
-        is $!append-child, $times, "expected to append-child be called $times times"
+    method verify-append-child(Int $times = 1) {
+        is $!append-child, $times, "expected to append-child be called $times times";
+        $!append-child = 0
     }
 
-    method verify-create-text-node(Int $times) {
-        is $!create-text-node, $times, "expected to create-text-node be called $times times"
+    method verify-create-text-node(Int $times = 1) {
+        is $!create-text-node, $times, "expected to create-text-node be called $times times";
+        $!create-text-node = 0
     }
 }
 
@@ -47,7 +52,7 @@ class Mock {
 
     $a.call-render;
 
-    $m1.verify-create-element:   1;
+    $m1.verify-create-element:   0;
     $m1.verify-append-child:     0;
     $m1.verify-create-text-node: 0;
 }
@@ -67,9 +72,9 @@ class Mock {
 
     $a.call-render;
 
-    $m1.verify-create-element:   1;
-    $m1.verify-append-child:     1;
-    $m1.verify-create-text-node: 1;
+    $m1.verify-create-element:   0;
+    $m1.verify-append-child:     0;
+    $m1.verify-create-text-node: 0;
 
 }
 {
@@ -89,9 +94,33 @@ class Mock {
 
     $a.call-render;
 
-    $m1.verify-create-element:   2;
-    $m1.verify-append-child:     2;
-    $m1.verify-create-text-node: 1;
+    $m1.verify-create-element:   0;
+    $m1.verify-append-child:     0;
+    $m1.verify-create-text-node: 0;
+}
+{
+    class Blo does Tag {
+        method render {
+            form(
+                h1("bla"),
+                h1("ble")
+            ),
+            input(:type<submit>)
+        }
+    }
+
+    my $m1 = Mock.new;
+    my $a = Blo(:document($m1));
+    $a.mount-on: Mock.new;
+    $m1.verify-create-element:   4;
+    $m1.verify-append-child:     4;
+    $m1.verify-create-text-node: 2;
+
+    $a.call-render;
+
+    $m1.verify-create-element:   0;
+    $m1.verify-append-child:     0;
+    $m1.verify-create-text-node: 0;
 }
 
 done-testing
