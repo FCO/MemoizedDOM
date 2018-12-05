@@ -49,3 +49,5 @@ my $a = Bla(:document(Mock.new));
 $a.mount-on: Mock.new;
 note "------------------------";
 $a.a = "ble";
+
+done-testing
