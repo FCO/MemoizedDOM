@@ -9,7 +9,7 @@
   "name" : "MemoizedDOM",
   "perl" : "6.c",
   "provides" : {
-    "MemoizedDOM"          : "lib/MemoizedDOM",
+    "MemoizedDOM"          : "lib/MemoizedDOM.pm6",
     "MemoizedDOM::Element" : "lib/MemoizedDOM/Element.pm6",
     "MemoizedDOM::Tag"     : "lib/MemoizedDOM/Tag.pm6",
     "MemoizedDOM::Subs"    : "lib/MemoizedDOM/Subs.pm6"
