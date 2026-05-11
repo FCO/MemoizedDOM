@@ -467,6 +467,16 @@ Raku.makeOutputTextarea = Perl6.makeOutputTextarea = function (id) {
 	return ta;
 };
 
+function showError(msg) {
+	console.error("Raku: " + msg);
+	var el = document.getElementById('todoapp');
+	if (el) el.textContent = "Error: " + msg;
+}
+
+window.addEventListener('error', function (e) {
+	console.error("Raku: Uncaught error:", e.message || e);
+});
+
 Raku.init = Perl6.init = function (readyCallback) {
 	if (Raku.state != "Uninitialized")
 		throw "Raku: can't call init in state "+Raku.state;
@@ -489,11 +499,28 @@ Raku.init = Perl6.init = function (readyCallback) {
 	script.async = true; script.defer = true;
 	// Order is important here: 1. Add to DOM, 2. set onload, 3. set src
 	document.getElementsByTagName('head')[0].appendChild(script);
+
+	var timeoutId = setTimeout(function () {
+		showError("perl6.js runtime failed to initialize within 60 seconds");
+	}, 60000);
+
 	script.onload = function () {
+		if (typeof window.evalP6 !== 'function') {
+			showError("perl6.js loaded but window.evalP6 was not set (runtime crashed during init)");
+			Raku.changeState("Ready");
+			return;
+		}
+		clearTimeout(timeoutId);
 		Raku.eval = Perl6.eval = window.evalP6;
 		Raku.changeState("Ready");
 		if (readyCallback) readyCallback();
 	};
+
+	script.onerror = function () {
+		clearTimeout(timeoutId);
+		showError("Failed to load perl6.js from " + script.src);
+	};
+
 	script.src = baseurl+"/perl6.js";
 }
 
@@ -528,7 +555,13 @@ window.addEventListener("load", function () {
 	else if (scripts.length) {
 		console.debug("Raku: Found",scripts.length,"embedded script(s), autorunning...");
 		var code = scripts.join(";\n");
-		Raku.init(function () { Raku.eval(code); });
+		Raku.init(function () {
+			try {
+				Raku.eval(code);
+			} catch (e) {
+				showError("Raku eval error: " + (e.message || e));
+			}
+		});
 	}
 	else console.debug("Raku: No embedded scripts");
 });
